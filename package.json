@@ -1,0 +1,21 @@
+{
+  "name": "video-summary",
+  "version": "0.0.1",
+  "description": "Transcribe and summarize videos",
+  "main": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "openai": "^3.2.1",
+    "youtube-transcript": "^1.0.5"
+  }
+}
