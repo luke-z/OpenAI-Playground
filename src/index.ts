@@ -1,10 +1,17 @@
 import { YoutubeTranscript } from "youtube-transcript";
 import { Configuration, OpenAIApi } from "openai";
+import { createReadStream } from "fs";
 
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const main = async () => {
+const configuration = new Configuration({
+  organization: process.env.OPENAI_ORG,
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+const textSummarization = async () => {
   const transcript = await YoutubeTranscript.fetchTranscript("pwHrxxnJNpM");
 
   const transcriptText = transcript.map((t) => t.text).join(" ");
@@ -21,12 +28,6 @@ const main = async () => {
     return;
   }
 
-  const configuration = new Configuration({
-    organization: process.env.OPENAI_ORG,
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-  const openai = new OpenAIApi(configuration);
-
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [
@@ -38,6 +39,17 @@ const main = async () => {
   });
 
   console.log(completion.data.choices[0].message.content);
+};
+const speechToText = async () => {
+  const file = createReadStream("./whisper.m4a") as any;
+  const transcription = await openai.createTranscription(file, "whisper-1");
+
+  console.log(transcription.data);
+};
+
+const main = async () => {
+  // await textSummarization();
+  await speechToText();
 };
 
 main();
